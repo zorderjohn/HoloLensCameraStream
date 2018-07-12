@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.VR.WSA;
-
+using UnityEngine.XR.WSA;
 using System;
-
 using HoloLensCameraStream;
 
 public class MatrixUsageApp : MonoBehaviour
@@ -73,7 +71,7 @@ public class MatrixUsageApp : MonoBehaviour
         cameraParams.rotateImage180Degrees = false; //If your image is upside down, remove this line.
         cameraParams.enableHolograms = false;
 
-        UnityEngine.WSA.Application.InvokeOnAppThread(() => { _videoTexture = new Texture2D(_resolution.width, _resolution.height, TextureFormat.BGRA32, false); }, false);
+        ThreadUtils.Instance.InvokeOnMainThread(() => { _videoTexture = new Texture2D(_resolution.width, _resolution.height, TextureFormat.BGRA32, false); });
 
         videoCapture.StartVideoModeAsync(cameraParams, OnVideoModeStarted);
     }
@@ -119,7 +117,7 @@ public class MatrixUsageApp : MonoBehaviour
 
         //This is where we actually use the image data
         //TODO: Create a class like VideoPanel for the next code
-        UnityEngine.WSA.Application.InvokeOnAppThread(() =>
+        ThreadUtils.Instance.InvokeOnMainThread(() =>
         {
             _videoTexture.LoadRawTextureData(_latestImageBytes);
             _videoTexture.wrapMode = TextureWrapMode.Clamp;
@@ -138,6 +136,6 @@ public class MatrixUsageApp : MonoBehaviour
             _videoPanelUI.gameObject.transform.position = imagePosition;
             _videoPanelUI.gameObject.transform.rotation = Quaternion.LookRotation(inverseNormal, cameraToWorldMatrix.GetColumn(1));
 
-        }, false);
+        });
     }
 }

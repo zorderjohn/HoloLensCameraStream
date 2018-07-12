@@ -21,6 +21,7 @@ ExportedObj/
 *.svd
 *.pdb
 *.weights
+.vs
 
 
 # Unity3D generated meta files

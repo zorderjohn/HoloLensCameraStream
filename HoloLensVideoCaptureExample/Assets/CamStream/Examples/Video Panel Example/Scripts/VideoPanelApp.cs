@@ -4,7 +4,7 @@
 //
 
 using UnityEngine;
-using UnityEngine.VR.WSA;
+using UnityEngine.XR.WSA;
 
 using System;
 
@@ -74,7 +74,8 @@ public class VideoPanelApp : MonoBehaviour
         cameraParams.rotateImage180Degrees = true; //If your image is upside down, remove this line.
         cameraParams.enableHolograms = false;
 
-        UnityEngine.WSA.Application.InvokeOnAppThread(() => { _videoPanelUI.SetResolution(_resolution.width, _resolution.height); }, false);
+        ThreadUtils.Instance.InvokeOnMainThread(() => { _videoPanelUI.SetResolution(_resolution.width, _resolution.height); });
+        
 
         videoCapture.StartVideoModeAsync(cameraParams, OnVideoModeStarted);
     }
@@ -93,7 +94,7 @@ public class VideoPanelApp : MonoBehaviour
     void OnFrameSampleAcquired(VideoCaptureSample sample)
     {
         //When copying the bytes out of the buffer, you must supply a byte[] that is appropriately sized.
-        //You can reuse this byte[] until you need to resize it (for whatever reason).
+        //You can reuse your byte[] unless you need to resize it for some reason.
         if (_latestImageBytes == null || _latestImageBytes.Length < sample.dataLength)
         {
             _latestImageBytes = new byte[sample.dataLength];
@@ -117,9 +118,9 @@ public class VideoPanelApp : MonoBehaviour
         sample.Dispose();
 
         //This is where we actually use the image data
-        UnityEngine.WSA.Application.InvokeOnAppThread(() =>
+        ThreadUtils.Instance.InvokeOnMainThread(() =>
         {
             _videoPanelUI.SetBytes(_latestImageBytes);
-        }, false);
+        });
     }
 }
