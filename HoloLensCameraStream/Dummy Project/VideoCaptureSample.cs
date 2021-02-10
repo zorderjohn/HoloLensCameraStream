@@ -36,6 +36,11 @@ namespace HoloLensCameraStream
             throw new NotImplementedException();
         }
 
+		public float[] GetCameraIntrinsics()
+		{
+			throw new NotImplementedException();
+		}
+
         public void UploadImageDataToTexture(object targetTexture)
         {
             throw new NotImplementedException();
